@@ -8,3 +8,4 @@ data/raw/*.csv
 data/processed/*.pkl
 data/raw/*.csv
 notebooks/*.csv
+.vscode/

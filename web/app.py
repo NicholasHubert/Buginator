@@ -8,7 +8,7 @@ import random
 import os
 import html as _h
 
-# --- Konfigurasi page ---
+# --- Page Configuration ---
 st.set_page_config(
     page_title="GitHub Issue Predictor",
     page_icon="🔴",
@@ -16,7 +16,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- INJEKSI CUSTOM CSS UNTUK TAMPILAN PREMIUM ---
+# --- INJECTION CUSTOM CSS UNTUK TAMPILAN PREMIUM ---
 st.markdown("""
 <style>
     html, body, [class*="css"] { font-family: 'Google Sans', sans-serif; }
@@ -44,10 +44,10 @@ st.markdown("""
         padding: 48px 40px;
         text-align: center;
         margin-bottom: 32px;
-        box-shadow: 0 8px 32px rgba(26,107,60,0.25);
+        box-shadow: 0 4px 16px rgba(0, 106, 235, 0.25);
     }
     .hero-title {
-        font-family: 'Playfair Display', serif;
+        font-family: 'Space Grotesk', serif;
         font-size: 3rem;
         color: white;
         margin: 0;
@@ -135,11 +135,11 @@ st.markdown("""
         width: 100%;
         cursor: pointer;
         transition: all 0.2s;
-        box-shadow: 0 4px 16px rgba(26,107,60,0.3);
+        box-shadow: 0 4px 16px rgba(255, 0, 0, 0.25);
     }
     div.stButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(26,107,60,0.4);
+        box-shadow: 0 6px 20px rgba(255, 0, 0, 0.35);
     }
     
     .footer {
@@ -273,7 +273,7 @@ def load_sample_data():
         df = pd.read_csv(csv_path, nrows=1000)
         return df
     except FileNotFoundError:
-        return pd.DataFrame() 
+        return pd.DataFrame()
 
 # --- SIDEBAR NAVIGATION ---
 with st.sidebar:
@@ -299,7 +299,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("""
     <div style="padding: 0 10px;">
-        <div style="font-size:0.8rem; color:white; font-weight:700; margin-bottom:8px; opacity:0.9;">Kelompok 8</div>
+        <div style="font-size:0.8rem; color:white; font-weight:700; margin-bottom:8px; opacity:0.9;">Group 8</div>
         <div style="font-size:0.7rem; color:rgba(255,255,255,0.6); line-height:1.6;">
             1. ANGELINA JOLIE CANDAYA 2802541644<br>
             2. JOSHUA KEVIN LIEM 2802535572<br>
@@ -308,13 +308,13 @@ with st.sidebar:
             5. ZAHRA' ZAKIYYAH PRIYONO 2802492554
         </div>
         <div style="margin-top:12px; font-size:0.65rem; color:rgba(255,255,255,0.4); text-align:center; border-top:1px solid rgba(255,255,255,0.1); padding-top:8px;">
-            Natural Language Project<br>
+            NLP Project<br>
             Binus University
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-def hero(title, subtitle, badge="Powered by Machine Learning"):
+def hero(title, subtitle, badge="Natural Language Processing Project"):
     st.markdown(f"""
     <div class="hero-box">
         <div class="hero-title">{title}</div>
@@ -337,24 +337,23 @@ if page == "Home":
     
     # Info tentang binary classification
     st.info("""
-    ℹ️ **Binary Classification:** Model memprediksi apakah GitHub issue adalah **🚨 CRITICAL** (serius, urgent) 
-    atau **✅ NON-CRITICAL** (tidak serius). Menggunakan 3 algoritma: Logistic Regression, Naive Bayes, & SVM.
+    ℹ️ **Binary Classification:** The model predicts whether a GitHub issue is **🚨 CRITICAL** (serious and urgent) or **✅ NON-CRITICAL** (not serious). It uses 3 algorithms: Logistic Regression, Naive Bayes, & SVM.
     """)
     
-    issue_text = st.text_area("Masukkan Detail Issue di bawah ini:", height=180, placeholder="Cth: The application crashes whenever I try to upload a file larger than 5MB...")
+    issue_text = st.text_area("Enter Issue Details below:", height=180, placeholder="Example: The application crashes whenever I try to upload a file larger than 5MB...")
     
     col1, col2, col3 = st.columns([2, 2, 1])
     with col2:
-        predict_button = st.button("🔥 Jalankan Prediksi")
+        predict_button = st.button("🔥 Run Prediction")
 
     if predict_button:
         if not issue_text.strip():
-            st.error("⚠️ Teks tidak boleh kosong!")
+            st.error("⚠️ Text must not be empty!")
         else:
             if tfidf_vectorizer is None:
-                st.error("❌ Gagal memprediksi: File tfidf_vectorizer.pkl belum termuat.")
+                st.error("❌ Prediction failed: tfidf_vectorizer.pkl file has not been loaded.")
             else:
-                with st.spinner("Mengirim ke model AI..."):
+                with st.spinner("Sending model to AI..."):
                     try:
                         cleaned = clean_text(issue_text)
                         vec_text = tfidf_vectorizer.transform([cleaned])
@@ -391,7 +390,7 @@ if page == "Home":
                                 # BINARY: proba[0] = Critical (class 0), proba[1] = Non-Critical (class 1)
                                 confidence_nb = max(proba_nb) * 100
 
-                                predictions['Naive Bayes'] = {
+                                predictions['Multinomial Naïve Bayes'] = {
                                     'prediction': pred_nb,
                                     'pred_num': pred_nb_num,
                                     'confidence': confidence_nb,
@@ -415,7 +414,7 @@ if page == "Home":
                                 except:
                                     confidence_svm = 50.0
                                 
-                                predictions['SVM (Best F1)'] = {
+                                predictions['Support Vector Machine'] = {
                                     'prediction': pred_svm,
                                     'pred_num': pred_svm_num,
                                     'confidence': confidence_svm,
@@ -428,7 +427,7 @@ if page == "Home":
                         
                         # Tampilkan hasil dari ketiga model
                         if predictions:
-                            st.markdown("<h3 style='color:white; text-align:center; margin-bottom:20px;'>📊 Hasil Prediksi dari 3 Model</h3>", unsafe_allow_html=True)
+                            st.markdown("<h3 style='color:white; text-align:center; margin-bottom:20px;'>📊 Prediction Results from 3 Models</h3>", unsafe_allow_html=True)
                             
                             cols = st.columns(len(predictions))
                             
@@ -442,35 +441,50 @@ if page == "Home":
                                     if "🚨" in pred:
                                         color = "#FF0000"
                                         icon = "🚨"
-                                        desc = "Segera diperhatikan - Issue serius!"
+                                        desc = "Immediate attention required - Serious issue!"
                                     else:  # NON-CRITICAL
                                         color = "#00FF00"
                                         icon = "✅"
-                                        desc = "Prioritas rendah - Bukan masalah serius"
+                                        desc = "Low priority - Not a serious issue"
                                     
                                     # Tambah badge "Best F1" untuk SVM
                                     badge_html = ""
-                                    if "Best F1" in model_name:
-                                        badge_html = "<div style='background:#FFD700; color:black; padding:2px 8px; border-radius:8px; font-size:0.7rem; font-weight:bold; display:inline-block; margin-bottom:8px;'>⭐ Terbaik F1</div>"
+                                    if "Support Vector Machine" in model_name:
+                                        badge_html = "<div style='background:#FFD700; color:black; padding:2px 8px; border-radius:8px; font-size:0.7rem; font-weight:bold; display:inline-block; margin-bottom:8px;'>⭐ Best F1</div>"
                                     
+                                    # st.markdown(f"""
+                                    # <div class="info-card" style="border-left: 6px solid {color}; text-align: center;">
+                                    #     <div style="margin-bottom:8px;">{badge_html}</div>
+                                    #     <h4 style="margin:0; color:{color}; margin-bottom:8px; font-size:0.9rem;">{model_name}</h4>
+                                    #     <div style="font-size:2.5rem; margin:12px 0;">{icon}</div>
+                                    #     <h3 style="margin:8px 0; color:white; font-size:1.6rem;">{pred}</h3>
+                                    #     <p style="color:#99aab5; font-size:0.85rem; margin:8px 0;">{desc}</p>
+                                    #     <div style="background:#202225; padding:12px; border-radius:8px; margin-top:12px; border:2px solid {color};">
+                                    #         <div style="font-size:2.2rem; color:{color}; font-weight:bold;">{conf:.1f}%</div>
+                                    #         <div style="font-size:0.75rem; color:#99aab5; margin-top:4px;">Confidence</div>
+                                    #     </div>
+                                    # </div>
+                                    # """, unsafe_allow_html=True)
                                     st.markdown(f"""
-                                    <div class="info-card" style="border-left: 6px solid {color}; text-align: center;">
-                                        <div style="margin-bottom:8px;">{badge_html}</div>
-                                        <h4 style="margin:0; color:{color}; margin-bottom:8px; font-size:0.9rem;">{model_name}</h4>
-                                        <div style="font-size:2.5rem; margin:12px 0;">{icon}</div>
-                                        <h3 style="margin:8px 0; color:white; font-size:1.6rem;">{pred}</h3>
-                                        <p style="color:#99aab5; font-size:0.85rem; margin:8px 0;">{desc}</p>
-                                        <div style="background:#202225; padding:12px; border-radius:8px; margin-top:12px; border:2px solid {color};">
-                                            <div style="font-size:2.2rem; color:{color}; font-weight:bold;">{conf:.1f}%</div>
-                                            <div style="font-size:0.75rem; color:#99aab5; margin-top:4px;">Confidence</div>
+                                        <div class="info-card" style="border-left: 6px solid {color}; text-align: center;">
+                                            <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 12px;">
+                                                <h4 style="margin: 0; color: {color}; font-size: 1.4rem; font-weight: bold;">{model_name}</h4>
+                                                <div>{badge_html}</div>
+                                            </div>
+                                            <div style="font-size:2.5rem; margin:12px 0;">{icon}</div>
+                                            <h3 style="margin:8px 0; color:white; font-size:1.6rem;">{pred}</h3>
+                                            <p style="color:#99aab5; font-size:0.85rem; margin:8px 0;">{desc}</p>
+                                            <div style="background:#202225; padding:12px; border-radius:8px; margin-top:12px; border:2px solid {color};">
+                                                <div style="font-size:2.2rem; color:{color}; font-weight:bold;">{conf:.1f}%</div>
+                                                <div style="font-size:0.75rem; color:#99aab5; margin-top:4px;">Confidence</div>
+                                            </div>
                                         </div>
-                                    </div>
                                     """, unsafe_allow_html=True)
                             
                             st.markdown("<br>", unsafe_allow_html=True)
                             
                             # Tampilkan detail probabilitas
-                            st.markdown("<h4 style='color:white; margin-top:24px;'>📈 Detail Probabilitas per Kelas</h4>", unsafe_allow_html=True)
+                            st.markdown("<h4 style='color:white; margin-top:24px;'>📈 Class Probability Details</h4>", unsafe_allow_html=True)
                             
                             for model_name, result in predictions.items():
                                 if result['probas'] is not None:
@@ -498,27 +512,22 @@ if page == "Home":
                                     
                                     st.markdown("")
                         else:
-                            st.error("❌ Gagal memprediksi: Tidak ada model yang tersedia.")
+                            st.error("❌ Prediction failed: No model is available.")
                             
                     except Exception as e:
-                        st.error(f"❌ Error saat prediksi: {str(e)}")
+                        st.error(f"❌ Prediction error: {str(e)}")
 
     col1, col2 = st.columns([3,2])
     with col1:
         section("Background")
         st.markdown("""
-        <div class="section-desc">        
-            This code is designed to analyze and process the existing labels in the GitHub Issues dataset as part of the label construction stage.
-            Since the dataset does not explicitly provide severity levels (Low, Medium, Critical), the available labels must first be explored to understand their structure and distribution. The labels are stored in a multi-label format as raw text, meaning that each issue may contain multiple labels combined in a single string.<br><br>
-            The main purpose of this process is to:
-            <ol>
-                <li>Extract and clean the raw labels from the dataset</li>
-                <li>Separate multiple labels into individual components</li>
-                <li>Normalize the labels for consistency</li>
-                <li>Analyze the frequency of each label</li>
-            </ol>
-            This analysis is important to identify which labels are relevant and can be used as the basis for constructing severity categories in the next step.
-        </div>  
+        <div class="section-desc">
+            <p>Software projects that use GitHub generate large volumes of issue reports every day. These reports include bug descriptions, feature requests, and general technical discussions. Each issue is typically assigned one or more labels to help organize and categorize the content.</p>
+            <p>In practice, these labels are often inconsistent and unstructured. Many GitHub Issue datasets do not provide explicit severity information such as Critical or Non-critical. Instead, severity must be inferred from existing labels that were created for other purposes. These labels are usually stored as raw multi-label text, where a single issue may contain multiple tags in one field.</p>
+            <p>This lack of standardized severity labeling creates a challenge for bug triaging. Developers and maintainers must spend additional time interpreting labels, separating multiple tags, and identifying which issues are Critical and which are Non-critical. As the number of issue reports grows, this process becomes increasingly difficult to manage manually.</p>
+            <p>Without a clear structure for severity, Critical issues can be misclassified or overlooked. This leads to delays in fixing important bugs and reduces the efficiency of software maintenance workflows.</p>
+            <p>To address this gap, there is a need to analyze existing issue labels and understand their distribution and structure. By examining how labels are used in real datasets, it becomes possible to identify patterns that separate Critical and Non-critical issues for later processing stages.</p>
+        </div>
         """, unsafe_allow_html=True)
 
         section("Dataset we are working with")
@@ -534,14 +543,14 @@ if page == "Home":
     with col2:
         section("NLP project workflow")
         steps = [
-            ("1", "Label Construction", "desc1"),
-            ("2", "EDA", "desc2"),
-            ("3", "Preprocessing", "desc3"),
-            ("4", "Feature Extraction", "desc4"),
-            ("5", "Modelling LR", "desc5"),
-            ("6", "Modelling NB", "desc6"),
-            ("7", "Evaluation", "desc7"),
-            ("8", "Baseline Count Vectorizer", "desc8"),
+            ("1", "Label Construction", "Extract and map raw GitHub labels to binary severity categories (Critical vs Non-Critical)"),
+            ("2", "EDA", "Explore dataset statistics, visualize class distribution, and identify data imbalance issues"),
+            ("3", "Preprocessing", "Apply text cleaning: lowercasing, regex cleaning, stopword removal, and lemmatization"),
+            ("4", "Feature Extraction", "Convert text documents into TF-IDF numerical vectors for model training"),
+            ("5", "Modelling LR", "Train Logistic Regression model with hyperparameter tuning and cross-validation"),
+            ("6", "Modelling NB", "Train Multinomial Naive Bayes classifier and evaluate performance metrics"),
+            ("7", "Modelling SVM", "Train SVM with best F1-score and compare all three algorithms"),
+            ("8", "Evaluation", "Comprehensive evaluation using F1-Score, Precision, Recall, and final model selection"),
         ]
         for num, title, desc in steps:
             st.markdown(f"""
@@ -557,7 +566,7 @@ if page == "Home":
     section("Project Team")
     st.markdown("""
     <div class="info-card" style="background: linear-gradient(135deg, #202225 0%, #2f3136 100%);">
-        <b style="color:#006aeb; font-size:1rem; display:block; margin-bottom:10px;">Kelompok 8</b>
+        <b style="color:#006aeb; font-size:1rem; display:block; margin-bottom:10px;">Group 8</b>
         <table style="width:100%; font-size:0.85rem; color:white; border-collapse:collapse;">
             <tr style="border-bottom:1px solid #40444b;">
                 <td style="padding:8px 0; font-weight:600;">ANGELINA JOLIE CANDAYA</td>
@@ -588,40 +597,40 @@ if page == "Home":
 # PAGE: DATA EXPLORER & EDA
 # ===========================================================================
 elif page == "📊 Data Explorer & EDA":
-    hero("Data Explorer & EDA", "Analisis karakteristik dataset, ketidakseimbangan kelas, dan proses transformasi teks", "Pipeline Tahap 1 & 2")
+    hero("Data Explorer & EDA", "Analysis of dataset characteristics, class imbalance, and text transformation processes", "Pipeline Stages 1 & 2")
     
     section("Overview Dataset")
     df_sample = load_sample_data()
     
     if df_sample.empty:
-        st.error("❌ File github_issues_preprocessed.csv tidak ditemukan di folder data/processed/")
+        st.error("❌ File github_issues_preprocessed.csv not found in folder data/processed/")
     else:
         c1, c2, c3 = st.columns(3)
         with c1:
             st.markdown("""
             <div class="info-card" style="text-align: center; border-top: 4px solid #006aeb;">
-                <h4 style="color: #99aab5; margin: 0; font-size:14px;">Total Dataset Bersih</h4>
-                <h2 style="color: white; margin: 5px 0;">114,065 <span style="font-size:14px; color:#99aab5;">Baris</span></h2>
+                <h4 style="color: #99aab5; margin: 0; font-size:14px;">Total Clean Dataset</h4>
+                <h2 style="color: white; margin: 5px 0;">114,065 <span style="font-size:14px; color:#99aab5;">Rows</span></h2>
             </div>
             """, unsafe_allow_html=True)
             
         with c2:
             st.markdown("""
             <div class="info-card" style="text-align: center; border-top: 4px solid #006aeb;">
-                <h4 style="color: #99aab5; margin: 0; font-size:14px;">Target Klasifikasi</h4>
-                <h2 style="color: white; margin: 5px 0;">2 <span style="font-size:14px; color:#99aab5;">Kelas Severity</span></h2>
+                <h4 style="color: #99aab5; margin: 0; font-size:14px;">Classification Target</h4>
+                <h2 style="color: white; margin: 5px 0;">2 <span style="font-size:14px; color:#99aab5;">Severity Class</span></h2>
             </div>
             """, unsafe_allow_html=True)
             
         with c3:
             st.markdown("""
             <div class="info-card" style="text-align: center; border-top: 4px solid #006aeb;">
-                <h4 style="color: #99aab5; margin: 0; font-size:14px;">Maksimal Fitur Vocab</h4>
-                <h2 style="color: white; margin: 5px 0;">50,000 <span style="font-size:14px; color:#99aab5;">Kata Penting</span></h2>
+                <h4 style="color: #99aab5; margin: 0; font-size:14px;">Maximum Vocabulary Features</h4>
+                <h2 style="color: white; margin: 5px 0;">50,000 <span style="font-size:14px; color:#99aab5;">Important Words</span></h2>
             </div>
             """, unsafe_allow_html=True)
 
-        st.markdown("<p style='color:#99aab5; margin-bottom: 5px;'>Sampel representatif data hasil pemrosesan (1.000 baris pertama):</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#99aab5; margin-bottom: 5px;'>Representative sample of processed data (first 1,000 rows):</p>", unsafe_allow_html=True)
         df_sample_view = df_sample.copy()
         df_sample_view['severity'] = df_sample_view['severity'].replace({
             'Major': 'Non-Critical',
@@ -637,49 +646,51 @@ elif page == "📊 Data Explorer & EDA":
         with col_chart_text:
             st.markdown("""
             <div class="section-desc" style="height: 100%;">
-                <h4 style="margin-top:0; color:#FFD700;">🚨 Masalah Class Imbalance</h4>
-                Berdasarkan visualisasi distribusi target di samping, dataset ini memiliki masalah <b>Ketidakseimbangan Kelas (Class Imbalance)</b> yang sangat nyata.
+                <h4 style="margin-top:0; color:#FFD700;">🚨 Class Imbalance Problem</h4>
+                Based on the target distribution visualization beside it, this dataset clearly suffers from a severe <b>Class Imbalance</b> problem.
                 <br><br>
-                Jumlah data dengan label <code>Critical</code> jauh lebih sedikit dibandingkan dengan kelas <code>Non-Critical</code>.
+                The number of data samples labeled as <code>Critical</code> is significantly smaller compared to the <code>Non-Critical</code> class.
                 <br><br>
-                <b>Dampak Praktis:</b> Model cenderung akan lebih pintar menebak kelas Non-Critical karena contoh datanya melimpah. Oleh sebab itu, performa model akhir tidak boleh dinilai dari Akurasi saja, melainkan berpatokan pada nilai <b>F1-Macro Average</b>.
+                <b>Practical Impact:</b> The model tends to become better at predicting the Non-Critical class because it has far more training examples. Therefore, the final model performance should not be evaluated using Accuracy alone, but should instead rely on the <b>F1-Macro Average</b> score.
             </div>
             """, unsafe_allow_html=True)
             
         with col_chart_visual:
-            st.markdown("<div class='info-card' style='margin-bottom:0;'>", unsafe_allow_html=True)
-            st.markdown("<h4 style='text-align:center; color:white; font-size:0.95rem; margin-bottom:10px;'>Distribusi Frekuensi Target Severity</h4>", unsafe_allow_html=True)
+            st.markdown("""
+            <div class='info-card' style='margin-bottom:0;'>
+                <h4 style='text-align:center; color:white; font-size:0.95rem;'>Target Severity Frequency Distribution</h4>
+            </div>
+            """, unsafe_allow_html=True)
             severity_binary = df_sample['severity'].replace({
                 'Major': 'Non-Critical',
                 'Minor': 'Non-Critical'
             })
             dist_data = severity_binary.value_counts().reindex(['Non-Critical', 'Critical']).fillna(0)
             st.bar_chart(dist_data, color="#006aeb")
-            st.markdown("</div>", unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#99aab5; margin-bottom: 5px;'>Statistik sebaran panjang kata di dalam teks dokumen laporan:</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#99aab5; margin-bottom: 5px;'>Statistics of word length distribution in the report document text:</p>", unsafe_allow_html=True)
         
         c_stat1, c_stat2, c_stat3 = st.columns(3)
         with c_stat1:
             st.markdown("""
             <div class="info-card" style="text-align: center;">
                 <div style="font-size:2.2rem; color:#006aeb; font-weight:900;">1</div>
-                <div style="color:#99aab5; font-size:0.85rem; font-weight:600; margin-top:4px;">Kata (Teks Terpendek)</div>
+                <div style="color:#99aab5; font-size:0.85rem; font-weight:600; margin-top:4px;">Words (Shortest Text)</div>
             </div>
             """, unsafe_allow_html=True)
         with c_stat2:
             st.markdown("""
             <div class="info-card" style="text-align: center;">
                 <div style="font-size:2.2rem; color:#006aeb; font-weight:900;">~108</div>
-                <div style="color:#99aab5; font-size:0.85rem; font-weight:600; margin-top:4px;">Kata (Rata-rata per Teks)</div>
+                <div style="color:#99aab5; font-size:0.85rem; font-weight:600; margin-top:4px;">Words (Average per Text)</div>
             </div>
             """, unsafe_allow_html=True)
         with c_stat3:
             st.markdown("""
             <div class="info-card" style="text-align: center; border-left: 4px solid red;">
                 <div style="font-size:2.2rem; color:red; font-weight:900;">12,000+</div>
-                <div style="color:#99aab5; font-size:0.85rem; font-weight:600; margin-top:4px;">Kata (Outlier Terpanjang)</div>
+                <div style="color:#99aab5; font-size:0.85rem; font-weight:600; margin-top:4px;">Words (Longest Outlier)</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -700,7 +711,7 @@ elif page == "📊 Data Explorer & EDA":
             st.markdown("""
             <div class="info-card" style="border-top: 4px solid red; height: 100%;">
                 <h4 style="color:red; font-weight:700;">🔴 Raw Text Input (Before)</h4>
-                <p style="color:#99aab5; font-size:0.8rem; margin-top:-5px;">Teks dokumen asli dari server GitHub</p>
+                <p style="color:#99aab5; font-size:0.8rem; margin-top:-5px;">Original document text from the GitHub server</p>
                 <div style="background:#202225; padding:15px; border-radius:8px; color:#eee; font-family:monospace; font-size:0.88rem; line-height:1.6; border: 1px solid #40444b;">
                     [Feature]: Invalid header error should show what the invalid header is.<br><br>
                     When passing an invalid header to fetch() it just throws a generic TypeError: Invalid name error... It would be very helpful if it included the name of the invalid header!
@@ -712,7 +723,7 @@ elif page == "📊 Data Explorer & EDA":
             st.markdown("""
             <div class="info-card" style="border-top: 4px solid #006aeb; height: 100%;">
                 <h4 style="color:#006aeb; font-weight:700;">🔵 Cleaned Tokens (After)</h4>
-                <p style="color:#99aab5; font-size:0.8rem; margin-top:-5px;">Hasil normalisasi korpus menggunakan NLTK</p>
+                <p style="color:#99aab5; font-size:0.8rem; margin-top:-5px;">Corpus normalization results using NLTK</p>
                 <div style="background:#202225; padding:15px; border-radius:8px; color:#eee; font-family:monospace; font-size:0.88rem; line-height:1.6; border: 1px solid #40444b;">
                     feature invalid header error show invalid header <br><br>
                     passing invalid header fetch throw generic typeerror invalid name error would helpful included name invalid header
@@ -724,17 +735,17 @@ elif page == "📊 Data Explorer & EDA":
 # PAGE: FEATURE ENGINEERING & BASELINE
 # ===========================================================================
 elif page == "⚙️ Feature Extraction":
-    hero("Feature Engineering & Baseline", "Eksperimen saintifik representasi teks dan pembagian dataset", "Pipeline Tahap 3 & 7")
+    hero("Feature Engineering & Baseline", "Scientific experiments on text representation and dataset splitting", "Pipeline Stages 3 & 7")
     
     section("Data Splitting")
-    st.markdown("<p style='color:#99aab5;'>Proporsi pembagian dataset untuk proses pelatihan (Training), validasi (Validation), dan pengujian akhir (Testing):</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#99aab5;'>Dataset split proportions for the training, validation, and final testing processes:</p>", unsafe_allow_html=True)
     
     c1, c2, c3 = st.columns(3)
     with c1:
         st.markdown("""
         <div class="info-card" style="text-align: center; border-bottom: 4px solid #006aeb;">
-            <h4 style="color: #99aab5; margin: 0; font-size:14px;">Data Train (Pelatihan)</h4>
-            <h2 style="color: white; margin: 5px 0;">79,845 <span style="font-size:14px; color:#99aab5;">Baris</span></h2>
+            <h4 style="color: #99aab5; margin: 0; font-size:14px;">Training Data</h4>
+            <h2 style="color: white; margin: 5px 0;">79,845 <span style="font-size:14px; color:#99aab5;">Rows</span></h2>
             <div style="font-size:0.8rem; color:#006aeb; font-weight:bold;">~70% Dataset</div>
         </div>
         """, unsafe_allow_html=True)
@@ -742,8 +753,8 @@ elif page == "⚙️ Feature Extraction":
     with c2:
         st.markdown("""
         <div class="info-card" style="text-align: center; border-bottom: 4px solid #FFD700;">
-            <h4 style="color: #99aab5; margin: 0; font-size:14px;">Data Validation (Validasi)</h4>
-            <h2 style="color: white; margin: 5px 0;">17,110 <span style="font-size:14px; color:#99aab5;">Baris</span></h2>
+            <h4 style="color: #99aab5; margin: 0; font-size:14px;">Validation Data</h4>
+            <h2 style="color: white; margin: 5px 0;">17,110 <span style="font-size:14px; color:#99aab5;">Rows</span></h2>
             <div style="font-size:0.8rem; color:#FFD700; font-weight:bold;">~15% Dataset</div>
         </div>
         """, unsafe_allow_html=True)
@@ -751,39 +762,39 @@ elif page == "⚙️ Feature Extraction":
     with c3:
         st.markdown("""
         <div class="info-card" style="text-align: center; border-bottom: 4px solid red;">
-            <h4 style="color: #99aab5; margin: 0; font-size:14px;">Data Test (Pengujian)</h4>
-            <h2 style="color: white; margin: 5px 0;">17,110 <span style="font-size:14px; color:#99aab5;">Baris</span></h2>
+            <h4 style="color: #99aab5; margin: 0; font-size:14px;">Test Data</h4>
+            <h2 style="color: white; margin: 5px 0;">17,110 <span style="font-size:14px; color:#99aab5;">Rows</span></h2>
             <div style="font-size:0.8rem; color:red; font-weight:bold;">~15% Dataset</div>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("---")
 
-    section("Eksperimen Representasi Teks (Baseline)")
+    section("Text Representation Experiment (Baseline)")
     st.markdown("""
     <div class="section-desc">
-        Komputer tidak bisa membaca teks mentah. Oleh karena itu, kita perlu melakukan eksperimen untuk membandingkan dua metode ekstraksi fitur: <b>TF-IDF Vectorizer</b> dan <b>CountVectorizer (sebagai Baseline)</b>. Keduanya dibatasi maksimal <b>50.000 kata</b> yang paling relevan untuk menjaga efisiensi memori.
+        Computers cannot directly understand raw text. Therefore, we need to conduct experiments to compare two feature extraction methods: <b>TF-IDF Vectorizer</b> and <b>CountVectorizer (as the baseline)</b>. Both are limited to a maximum of <b>50,000 of the most relevant words</b> to maintain memory efficiency.
     </div>
     """, unsafe_allow_html=True)
 
     col_table, col_text = st.columns([4, 5])
     
     with col_table:
-        st.markdown("<h4 style='color:white; font-size:1rem; margin-bottom:10px;'>Tabel Komparasi Akurasi (Logistic Regression)</h4>", unsafe_allow_html=True)
+        st.markdown("<h4 style='color:white; font-size:1rem; margin-bottom:10px;'>Accuracy Comparison Table (Logistic Regression)</h4>", unsafe_allow_html=True)
         baseline_data = {
-            "Metode Representasi": ["CountVectorizer", "TF-IDF Vectorizer"],
-            "Akurasi": ["80.50%", "80.36%"],
-            "Prinsip": ["Menghitung Frekuensi Murni", "Bobot Kepentingan Kata"]
+            "Representation Method": ["CountVectorizer", "TF-IDF Vectorizer"],
+            "Accuracy": ["80.50%", "80.36%"],
+            "Principle": ["Calculates Pure Frequency", "Word Importance Weight"]
         }
         st.dataframe(pd.DataFrame(baseline_data), hide_index=True, use_container_width=True)
         
     with col_text:
         st.markdown("""
         <div class="info-card" style="border-left: 4px solid #FFD700; height: 100%;">
-            <h4 style="color:#FFD700; margin-top:0;">💡 Kesimpulan Eksperimen</h4>
-            Hasil pada data *Test* menunjukkan bahwa <b>TF-IDF</b> (80.36%) dan <b>CountVectorizer</b> (80.50%) menghasilkan tingkat akurasi yang nyaris identik.
+            <h4 style="color:#FFD700; margin-top:0;">💡 Experiment Conclusion</h4>
+            The results on the <i>Test</i> data show that <b>TF-IDF</b> (80.36%) and <b>CountVectorizer</b> (80.50%) produce nearly identical accuracy levels.
             <br><br>
-            Hal ini memberikan <i>insight</i> penting: <b>masalah utama (bottleneck) dalam proyek ini bukan terletak pada metode representasi teksnya</b>, melainkan pada <i>Class Imbalance</i> (yang telah kita lihat di EDA) dan kemampuan algoritma Machine Learning itu sendiri dalam memisahkan pola kelas yang minoritas.
+            This provides an important <i>insight</i>: <b>the main problem (bottleneck) in this project does not lie in the text representation method</b>, but rather in the <i>Class Imbalance</i> issue (which we observed during EDA) and the ability of the Machine Learning algorithm itself to separate minority class patterns.
         </div>
         """, unsafe_allow_html=True)
 
@@ -791,56 +802,78 @@ elif page == "⚙️ Feature Extraction":
 # PAGE: MODEL EVALUATION & COMPARISON
 # ===========================================================================
 elif page == "🏆 Model Evaluation & Comparison":
-    hero("Model Evaluation & Comparison", "Evaluasi mendalam, komparasi algoritma, dan performa prediksi final", "Tahap 4, 5, 6, & 7")
+    hero("Model Evaluation & Comparison", "In-depth evaluation, algorithm comparison, and final prediction performance", "Stages 4, 5, 6, & 7")
     
-    section("Head-to-Head: LR vs Multinomial NB")
+    section("Head-to-Head: LR vs Multinomial NB vs Support Vector Machine")
     st.markdown("""
     <div class="section-desc">
-        Mengingat dataset kita memiliki masalah <b>Class Imbalance</b> (kelas Critical sangat minoritas), metrik Akurasi saja bisa menyesatkan. Oleh karena itu, kita membandingkan performa <b>Logistic Regression (LR)</b> dan <b>Multinomial Naïve Bayes (MNB)</b> dengan fokus utama pada metrik <b>F1-Score kelas Critical</b>.
+        Since our dataset suffers from a <b>Class Imbalance</b> problem, where the Critical class is highly underrepresented, the Accuracy metric alone can be misleading. Therefore, we compare the performance of <b>Logistic Regression (LR)</b> and <b>Multinomial Naïve Bayes (MNB)</b> with the main focus on the <b>F1-Score for the Critical class</b> metric.
     </div>
     """, unsafe_allow_html=True)
     
-    c1, c2 = st.columns(2)
+    c1, c2, c3 = st.columns(3)
     with c1:
         st.markdown("""
         <div class="info-card" style="border-top: 4px solid #006aeb; height: 100%;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <h3 style="color:#006aeb; margin:0;">Logistic Regression</h3>
-                <span style="background:#006aeb; color:white; padding:4px 12px; border-radius:12px; font-size:0.8rem; font-weight:bold;">WINNER 🏆</span>
             </div>
             <hr style="border-color:#40444b; margin:10px 0;">
             <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                <span style="color:#99aab5; font-size:1.1rem;">Akurasi Keseluruhan:</span>
-                <span style="color:white; font-size:1.2rem; font-weight:bold;">80.36%</span>
+                <span style="color:#99aab5; font-size:1.1rem;">Overall Accuracy:</span>
+                <span style="color:white; font-size:1.2rem; font-weight:bold;">85.99%</span>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; background:#202225; padding:10px; border-radius:8px; border:1px solid #006aeb;">
                 <span style="color:#99aab5; font-size:1.1rem; font-weight:bold;">F1-Score Critical:</span>
-                <span style="color:#006aeb; font-size:1.8rem; font-weight:900;">0.76</span>
+                <span style="color:#006aeb; font-size:1.8rem; font-weight:900;">0.87</span>
             </div>
-            <p style="color:#99aab5; font-size:0.85rem; margin-top:10px;">Algoritma ini sangat tangguh dalam mempelajari pola kelas minoritas dan menangani representasi teks yang <i>sparse</i> (renggang) dari TF-IDF.</p>
+            <p style="color:#99aab5; font-size:0.85rem; margin-top:10px;">This algorithm is highly robust in learning minority class patterns and handling the <i>sparse</i> text representation produced by TF-IDF.</p>
         </div>
         """, unsafe_allow_html=True)
 
     with c2:
         st.markdown("""
-        <div class="info-card" style="border-top: 4px solid red; height: 100%;">
-            <h3 style="color:red; margin:0;">Multinomial Naïve Bayes</h3>
+        <div class="info-card" style="border-top: 4px solid #FFD700; height: 100%;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="color:#FFD700; margin:0;">Multinomial Naïve Bayes</h3>
+            </div>
             <hr style="border-color:#40444b; margin:10px 0;">
             <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                <span style="color:#99aab5; font-size:1.1rem;">Akurasi Keseluruhan:</span>
-                <span style="color:white; font-size:1.2rem; font-weight:bold;">74.59%</span>
+                <span style="color:#99aab5; font-size:1.1rem;">Overall Accuracy:</span>
+                <span style="color:white; font-size:1.2rem; font-weight:bold;">78.24%</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#202225; padding:10px; border-radius:8px; border:1px solid #FFD700;">
+                <span style="color:#99aab5; font-size:1.1rem; font-weight:bold;">F1-Score Critical:</span>
+                <span style="color:#FFD700; font-size:1.8rem; font-weight:900;">0.79</span>
+            </div>
+            <p style="color:#99aab5; font-size:0.85rem; margin-top:10px;">Highly sensitive to data imbalance. MNB more frequently misclassifies the Critical class as the majority class (Non-Critical).</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    
+    with c3:
+        st.markdown("""
+        <div class="info-card" style="border-top: 4px solid red; height: 100%;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="color:red; margin:0;">Support Vector Machine</h3>
+                <span style="background:red; color:white; padding:4px 12px; border-radius:12px; font-size:0.8rem; font-weight:bold;">WINNER</span>
+            </div>
+            <hr style="border-color:#40444b; margin:10px 0;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <span style="color:#99aab5; font-size:1.1rem;">Overall Accuracy:</span>
+                <span style="color:white; font-size:1.2rem; font-weight:bold;">93.74%</span>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; background:#202225; padding:10px; border-radius:8px; border:1px solid red;">
                 <span style="color:#99aab5; font-size:1.1rem; font-weight:bold;">F1-Score Critical:</span>
-                <span style="color:red; font-size:1.8rem; font-weight:900;">0.46</span>
+                <span style="color:red; font-size:1.8rem; font-weight:900;">0.94</span>
             </div>
-            <p style="color:#99aab5; font-size:0.85rem; margin-top:10px;">Sangat sensitif terhadap ketidakseimbangan data. MNB lebih sering salah menebak kelas Critical sebagai kelas mayoritas (Non-Critical).</p>
+            <p style="color:#99aab5; font-size:0.85rem; margin-top:10px;">The decision boundary is robust, stable, and generalizes well to both classes rather than favoring one over the other.</p>
         </div>
         """, unsafe_allow_html=True)
 
     st.markdown("---")
 
-    section("Visualisasi Performa (Logistic Regression)")
+    section("Performance Visualization (Support Vector Machine)")
     
     col_lc, col_cm = st.columns(2)
     
@@ -851,14 +884,14 @@ elif page == "🏆 Model Evaluation & Comparison":
         """, unsafe_allow_html=True)
         
         try:
-            st.image("image_ff2747.png", use_container_width=True)
+            st.image("../reports/learning_curve_comparison.png", use_container_width=True)
             st.markdown("""
             <div style="color:#99aab5; font-size:0.85rem; margin-top:10px; line-height:1.5;">
-                <b>Interpretasi:</b> Grafik ini membuktikan bahwa model Logistic Regression <b>tidak mengalami overfitting</b>. Garis <i>Training Accuracy</i> dan <i>Validation Accuracy</i> berjalan stabil, berdekatan, dan konvergen seiring bertambahnya jumlah data latih.
+                <b>Interpretation:</b> This graph proves that the SVM model <b>does not experience overfitting</b>. The <i>Training Accuracy</i> and <i>Validation Accuracy</i> curves remain stable, close to each other, and converge as the amount of training data increases.
             </div>
             """, unsafe_allow_html=True)
         except Exception:
-            st.error("⚠️ File 'image_ff2747.png' tidak ditemukan di direktori.")
+            st.error("⚠️ File 'learning_curve_comparison.png' not found in the directory.")
             
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -869,22 +902,42 @@ elif page == "🏆 Model Evaluation & Comparison":
         """, unsafe_allow_html=True)
         
         try:
-            st.image("image_1ba247.png", use_container_width=True)
+            st.image("../reports/confusion_matrix_comparison.png", use_container_width=True)
             st.markdown("""
             <div style="color:#99aab5; font-size:0.85rem; margin-top:10px; line-height:1.5;">
-                <b>Interpretasi:</b> Matriks ini memetakan prediksi yang benar (diagonal utama) dan yang meleset. Kesalahan klasifikasi terbanyak terjadi ketika model mengira laporan <code>Critical</code> sebagai <code>Non-Critical</code>, yang secara linguistik memang sering memiliki kemiripan kata (<i>overlapping keywords</i>).
+                <b>Interpretation:</b> This matrix maps both correct predictions (main diagonal) and misclassifications. The most common classification error occurs when the model predicts a <code>Critical</code> report as <code>Non-Critical</code>, which linguistically often share similar words (<i>overlapping keywords</i>).
             </div>
             """, unsafe_allow_html=True)
         except Exception:
-            st.error("⚠️ File 'image_1ba247.png' tidak ditemukan di direktori.")
+            st.error("⚠️ File 'confusion_matrix_comparison.png' not found in the directory.")
+            
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    col_leftc, col_centerm, col_rightm = st.columns([0.5,1,0.5])
+
+    with col_centerm:
+        st.markdown("""
+        <div class="info-card" style="height: 100%;">
+            <h4 style="color:#FFD700; text-align:center;">📊 F1 Score Comparison</h4>
+        """, unsafe_allow_html=True)
+        
+        try:
+            st.image("../reports/f1_score_comparison_grouped.png", use_container_width=True)
+            st.markdown("""
+            <div style="color:#99aab5; font-size:0.85rem; margin-top:10px; line-height:1.5;">
+                <b>Interpretation:</b> SVM is the best model because it achieves the highest and most balanced F1-scores (≥ 0.930) for both classes. The consistent performance hierarchy across categories (<i>SVM > Logistic Regression > Naive Bayes</i>) proves that SVM creates the most accurate decision boundary for your data with minimal class bias.
+            </div>
+            """, unsafe_allow_html=True)
+        except Exception:
+            st.error("⚠️ File 'f1_score_comparison_grouped.png' not found in the directory.")
             
         st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("---")
 
-    section("Final Classification Report (Logistic Regression)")
-    st.markdown("<p style='color:#99aab5;'>Laporan evaluasi klasifikasi rinci untuk model Logistic Regression terbaik pada Data Test (17.110 laporan):</p>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#99aab5; font-size:0.8rem;'>Catatan: Setelah konversi ke binary class, nilai metrik perlu dihitung ulang sesuai hasil evaluasi terbaru.</p>", unsafe_allow_html=True)
+    section("Final Classification Report (Support Vector Machine)")
+    st.markdown("<p style='color:#99aab5;'>Detailed classification evaluation report for the best Support Vector Machine model on the Test Data (17,110 reports):</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#99aab5; font-size:0.8rem;'>Note: After converting to a binary class, the metric values need to be recalculated based on the latest evaluation results.</p>", unsafe_allow_html=True)
     
     report_data = {
         "Class / Label": ["Critical", "Non-Critical", "accuracy", "macro avg", "weighted avg"],

@@ -1,11 +1,10 @@
 __pycache__/ 
 *.pyc 
 .env 
-data/raw/* 
-!data/raw/.gitkeep 
-data/processed/*.csv
-data/raw/*.csv
-data/processed/*.pkl
-data/raw/*.csv
+data/raw/
+data/processed/
+*.parquet
+*.csv
+*.pkl
 notebooks/*.csv
 .vscode/

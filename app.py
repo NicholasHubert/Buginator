@@ -166,11 +166,9 @@ def load_models():
     svm_biner_model = None
     tfidf_vectorizer = None
 
-    # 2. Setup path - gunakan __file__ untuk mendapatkan lokasi app.py
-    # Kemudian naik 1 level ke project root, lalu akses folder data
-    app_dir = os.path.dirname(os.path.abspath(__file__))  # D:\...\web
-    project_root = os.path.dirname(app_dir)  # D:\...\Bug-Severity-Classification
-    base_path = os.path.join(project_root, 'data', 'processed')
+    # 2. Setup path - app.py is now at project root level
+    app_dir = os.path.dirname(os.path.abspath(__file__))  # D:\...\Bug-Severity-Classification
+    base_path = os.path.join(app_dir, 'data', 'processed')
 
     # 3. Load secara independen satu per satu
     try:
@@ -268,8 +266,7 @@ def convert_to_binary(pred_num):
 def load_sample_data():
     try:
         app_dir = os.path.dirname(os.path.abspath(__file__))
-        project_root = os.path.dirname(app_dir)
-        csv_path = os.path.join(project_root, 'data', 'processed', 'github_issues_preprocessed.csv')
+        csv_path = os.path.join(app_dir, 'data', 'processed', 'github_issues_preprocessed.csv')
         df = pd.read_csv(csv_path, nrows=1000)
         return df
     except FileNotFoundError:
@@ -884,7 +881,7 @@ elif page == "🏆 Model Evaluation & Comparison":
         """, unsafe_allow_html=True)
         
         try:
-            st.image("../reports/learning_curve_comparison.png", use_container_width=True)
+            st.image("reports/learning_curve_comparison.png", use_container_width=True)
             st.markdown("""
             <div style="color:#99aab5; font-size:0.85rem; margin-top:10px; line-height:1.5;">
                 <b>Interpretation:</b> This graph proves that the SVM model <b>does not experience overfitting</b>. The <i>Training Accuracy</i> and <i>Validation Accuracy</i> curves remain stable, close to each other, and converge as the amount of training data increases.
@@ -902,7 +899,7 @@ elif page == "🏆 Model Evaluation & Comparison":
         """, unsafe_allow_html=True)
         
         try:
-            st.image("../reports/confusion_matrix_comparison.png", use_container_width=True)
+            st.image("reports/confusion_matrix_comparison.png", use_container_width=True)
             st.markdown("""
             <div style="color:#99aab5; font-size:0.85rem; margin-top:10px; line-height:1.5;">
                 <b>Interpretation:</b> This matrix maps both correct predictions (main diagonal) and misclassifications. The most common classification error occurs when the model predicts a <code>Critical</code> report as <code>Non-Critical</code>, which linguistically often share similar words (<i>overlapping keywords</i>).
@@ -922,7 +919,7 @@ elif page == "🏆 Model Evaluation & Comparison":
         """, unsafe_allow_html=True)
         
         try:
-            st.image("../reports/f1_score_comparison_grouped.png", use_container_width=True)
+            st.image("reports/f1_score_comparison_grouped.png", use_container_width=True)
             st.markdown("""
             <div style="color:#99aab5; font-size:0.85rem; margin-top:10px; line-height:1.5;">
                 <b>Interpretation:</b> SVM is the best model because it achieves the highest and most balanced F1-scores (≥ 0.930) for both classes. The consistent performance hierarchy across categories (<i>SVM > Logistic Regression > Naive Bayes</i>) proves that SVM creates the most accurate decision boundary for your data with minimal class bias.
